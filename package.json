@@ -70,10 +70,15 @@
       "dist/**/*",
       "index.js",
       "package.json",
-      "src/**/*",
-      "resource/**/*",
-      "public/**/*",
-      "preload.js"
+      "preload.js",
+      "!src/**/*",
+      "!docs/**/*",
+      "!test/**/*",
+      "!scripts/**/*",
+      "!*.md",
+      "!webpack.config.js",
+      "!.gitignore",
+      "!.vscode/**/*"
     ],
     "extraResources": [
       {
@@ -85,9 +90,12 @@
         ]
       }
     ],
-    "asar": true,
+    "asar": {
+      "smartUnpack": true
+    },
     "compression": "maximum",
     "removePackageScripts": true,
+    "removeElectronJunk": true,
     "afterSign": null,
     "win": {
       "target": [
@@ -117,7 +125,9 @@
       "installerIcon": "resource/icon/installer/installer.ico",
       "uninstallerIcon": "resource/icon/installer/installer.ico",
       "installerHeaderIcon": "resource/icon/installer/installer.ico",
-      "artifactName": "${productName}-${version}-setup.${ext}"
+      "artifactName": "${productName}-${version}-setup.${ext}",
+      "differentialPackage": false,
+      "warningsAsErrors": false
     },
     "mac": {
       "target": [
@@ -183,7 +193,10 @@
     "fileAssociations": [],
     "asarUnpack": [
       "node_modules/system-proxy/**/*"
-    ]
+    ],
+    "electronVersion": "35.1.2",
+    "nodeGypRebuild": false,
+    "npmRebuild": false
   },
   "pnpm": {
     "onlyBuiltDependencies": [
