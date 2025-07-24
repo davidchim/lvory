@@ -230,6 +230,8 @@ export default {
     selectTool: 'Select Tool',
     traceroute: 'Traceroute',
     tracerouteDescription: 'Visual network path tracing',
+    natDetection: 'NAT Detection',
+    natDetectionDescription: 'NAT type detection and network connectivity analysis',
     targetHost: 'Target Host',
     targetPlaceholder: 'Enter domain or IP address',
     startTrace: 'Start Trace',
@@ -248,7 +250,66 @@ export default {
     location: 'Location',
     rtt: 'RTT',
     viewMap: 'View Map',
-    backToTable: 'Back to Table'
+    backToTable: 'Back to Table',
+
+    // Professional NAT Detection
+    professionalNATDetection: 'Professional NAT Type Detection',
+    professionalNATDescription: 'Four core tests: Endpoint Independent Mapping, Address Dependent Filtering, Address Port Dependent Filtering, Symmetric NAT Detection',
+    startDetection: 'Start Detection',
+    stopDetection: 'Stop Detection',
+    detecting: 'Detecting...',
+    testCompleted: 'Test Completed',
+    testError: 'Test Error',
+    runningSingleTest: 'Running Single Test...',
+
+    // Test Modes
+    testMode: 'Test Mode',
+    fullTest: 'Full Detection',
+    singleTest: 'Single Test',
+    selectTestType: 'Select Test Type',
+
+    // Test Types
+    eimTest: 'Endpoint Independent Mapping Test',
+    eimDescription: 'Detects whether internal IP/port combinations always map to the same external IP/port combinations',
+    adfTest: 'Address Dependent Filtering Test',
+    adfDescription: 'Detects whether NAT only allows inbound packets from external IP addresses that have previously established communication',
+    apdfTest: 'Address Port Dependent Filtering Test',
+    apdfDescription: 'Detects whether NAT only allows inbound packets from specific external IP address and port combinations',
+    symmetricTest: 'Symmetric NAT Test',
+    symmetricDescription: 'Detects whether NAT assigns different external ports for each connection when connecting to different external target addresses',
+
+    // Test Environment
+    testingDomestic: 'Testing domestic network environment...',
+    testingInternational: 'Testing international network environment...',
+    testing: 'Testing',
+
+    // Results Display
+    testResults: 'Test Results',
+    environmentComparison: 'Environment Comparison',
+    domesticEnvironment: 'Domestic Environment',
+    internationalEnvironment: 'International Environment',
+    successRate: 'Success Rate',
+    primaryNATType: 'Primary NAT Type',
+    testConsistency: 'Test Consistency',
+    consistencyRate: 'Consistency Rate',
+    recommendations: 'Recommendations',
+
+    // Test Status
+    testPending: 'Pending',
+    testRunning: 'Running',
+    testCompleted: 'Completed',
+    testFailed: 'Failed',
+
+    // NAT Type Details
+    natTypeDetails: 'NAT Type Details',
+    mappingBehavior: 'Mapping Behavior',
+    filteringBehavior: 'Filtering Behavior',
+    proxyCompatibility: 'Proxy Compatibility',
+
+    // Recommendation Levels
+    recommendationGood: 'Network Environment Good',
+    recommendationCaution: 'Needs Attention',
+    recommendationWarning: 'Needs Optimization'
   },
 
   // Update Related

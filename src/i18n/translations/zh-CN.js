@@ -230,6 +230,8 @@ export default {
     selectTool: '选择工具',
     traceroute: '路由追踪',
     tracerouteDescription: '可视化网络路径跟踪',
+    natDetection: 'NAT检测',
+    natDetectionDescription: 'NAT类型检测与网络连通性分析',
     targetHost: '目标主机',
     targetPlaceholder: '输入域名或IP地址',
     startTrace: '开始追踪',
@@ -248,7 +250,66 @@ export default {
     location: '位置',
     rtt: 'RTT',
     viewMap: '查看地图',
-    backToTable: '返回表格'
+    backToTable: '返回表格',
+
+    // NAT检测专业功能
+    professionalNATDetection: '专业NAT类型检测',
+    professionalNATDescription: '四项核心测试：端点独立映射、地址依赖过滤、地址端口依赖过滤、对称NAT检测',
+    startDetection: '开始检测',
+    stopDetection: '停止检测',
+    detecting: '检测中...',
+    testCompleted: '检测完成',
+    testError: '检测错误',
+    runningSingleTest: '执行单项测试中...',
+
+    // 测试模式
+    testMode: '测试模式',
+    fullTest: '完整检测',
+    singleTest: '单项测试',
+    selectTestType: '选择测试类型',
+
+    // 测试类型
+    eimTest: '端点独立映射测试',
+    eimDescription: '检测内部IP/端口组合是否始终映射到相同的外部IP/端口组合',
+    adfTest: '地址依赖过滤测试',
+    adfDescription: '检测NAT是否仅允许来自先前已建立通信的外部IP地址的入站数据包通过',
+    apdfTest: '地址端口依赖过滤测试',
+    apdfDescription: '检测NAT是否仅允许来自特定外部IP地址和端口组合的入站数据包通过',
+    symmetricTest: '对称NAT测试',
+    symmetricDescription: '检测当连接到不同的外部目标地址时，NAT是否为每个连接分配不同的外部端口',
+
+    // 测试环境
+    testingDomestic: '正在测试境内网络环境...',
+    testingInternational: '正在测试国际网络环境...',
+    testing: '正在测试',
+
+    // 结果显示
+    testResults: '检测结果',
+    environmentComparison: '环境对比',
+    domesticEnvironment: '境内环境',
+    internationalEnvironment: '国际环境',
+    successRate: '成功率',
+    primaryNATType: '主要NAT类型',
+    testConsistency: '测试一致性',
+    consistencyRate: '一致性率',
+    recommendations: '建议',
+
+    // 测试状态
+    testPending: '等待测试',
+    testRunning: '测试中',
+    testCompleted: '已完成',
+    testFailed: '测试失败',
+
+    // NAT类型详细说明
+    natTypeDetails: 'NAT类型详情',
+    mappingBehavior: '映射行为',
+    filteringBehavior: '过滤行为',
+    proxyCompatibility: '代理兼容性',
+
+    // 建议级别
+    recommendationGood: '网络环境良好',
+    recommendationCaution: '需要注意',
+    recommendationWarning: '需要优化'
   },
 
   // 更新相关
