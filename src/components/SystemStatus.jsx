@@ -12,28 +12,26 @@ const SystemStatus = () => {
   const [coreDownloadError, setCoreDownloadError] = useState('');
   const [coreDownloadSuccess, setCoreDownloadSuccess] = useState(false);
 
-  // 初始化数据订阅：监听配置文件变更事件并获取sing-box核心版本信息
+  // 获取sing-box版本
+  const fetchCoreVersion = async () => {
+    if (window.electron && window.electron.singbox && window.electron.singbox.getVersion) {
+      try {
+        const result = await window.electron.singbox.getVersion();
+        if (result.success) {
+          setSystemStats(prev => ({
+            ...prev,
+            coreVersion: result.version || 'unknown'
+          }));
+        }
+      } catch (error) {
+        console.error('获取版本失败:', error);
+      }
+    }
+  };
+
   useEffect(() => {
-    // 处理配置文件更新事件：当主进程推送新配置时更新组件状态
     const handleProfileData = (event, data) => {
       setProfileData(data || []);
-    };
-
-    // 获取sing-box版本
-    const fetchCoreVersion = async () => {
-      if (window.electron && window.electron.singbox && window.electron.singbox.getVersion) {
-        try {
-          const result = await window.electron.singbox.getVersion();
-          if (result.success) {
-            setSystemStats(prev => ({
-              ...prev,
-              coreVersion: result.version || 'unknown'
-            }));
-          }
-        } catch (error) {
-          console.error('获取版本失败:', error);
-        }
-      }
     };
 
     let removeProfileListener = null;
@@ -81,14 +79,7 @@ const SystemStatus = () => {
           if (result.success) {
             setCoreDownloadSuccess(true);
             // 更新版本信息
-            window.electron.singbox.getVersion().then(versionResult => {
-              if (versionResult.success) {
-                setSystemStats(prev => ({
-                  ...prev,
-                  coreVersion: versionResult.version || 'unknown'
-                }));
-              }
-            });
+            fetchCoreVersion();
           } else {
             setCoreDownloadError(result.error || '下载失败');
           }
