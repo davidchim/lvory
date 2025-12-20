@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -9,6 +10,13 @@ const isProduction = process.env.NODE_ENV === 'production';
 module.exports = {
   mode: isProduction ? 'production' : 'development',
   entry: './src/index.js',
+  cache: {
+    type: 'filesystem',
+    cacheDirectory: path.resolve(__dirname, '.webpack-cache'),
+    buildDependencies: {
+      config: [__filename]
+    }
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: isProduction ? '[name].[contenthash].js' : '[name].js',
@@ -71,22 +79,43 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {
-                targets: {
-                  node: '24'
-                },
-                modules: false
-              }],
-              ['@babel/preset-react', {
-                runtime: 'automatic'
-              }]
-            ]
+        use: [
+          ...(!isProduction
+            ? [
+                {
+                  loader: 'thread-loader',
+                  options: {
+                    workers: Math.max(1, os.cpus().length - 1),
+                    poolTimeout: Infinity
+                  }
+                }
+              ]
+            : []),
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: {
+                      node: '24'
+                    },
+                    modules: false
+                  }
+                ],
+                [
+                  '@babel/preset-react',
+                  {
+                    runtime: 'automatic'
+                  }
+                ]
+              ]
+            }
           }
-        }
+        ]
       },
       {
         test: /\.css$/,

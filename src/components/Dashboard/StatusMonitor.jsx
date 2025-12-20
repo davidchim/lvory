@@ -185,7 +185,7 @@ const useStatusMonitor = (singBoxControl, setSystemStats, setProfileData, setNod
   useEffect(() => {
     console.log('设置版本更新监听器');
     // 检查window.electron是否存在
-    if (window.electron && window.electron.singbox && window.electron.singbox.onVersionUpdate) {
+    if (window.electron?.singbox?.onVersionUpdate) {
       // 监听版本更新
       console.log('注册onVersionUpdate监听器');
       const removeListener = window.electron.singbox.onVersionUpdate(data => {
@@ -197,7 +197,7 @@ const useStatusMonitor = (singBoxControl, setSystemStats, setProfileData, setNod
         }));
       });
       
-      if (window.electron.singbox && window.electron.singbox.getVersion) {
+      if (window.electron.singbox?.getVersion) {
         window.electron.singbox.getVersion()
           .then(result => {
             console.log('获取版本结果:', result);
@@ -219,7 +219,7 @@ const useStatusMonitor = (singBoxControl, setSystemStats, setProfileData, setNod
         console.log('移除版本更新监听器');
         if (removeListener) removeListener();
       };
-    } else {
+    } else if (window.electron) {
       console.warn('electron.singbox.onVersionUpdate不可用');
     }
   }, [setSystemStats]);

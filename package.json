@@ -2,22 +2,12 @@
   "name": "lvory",
   "version": "0.2.4",
   "description": "Minimalist Cross-Platform Client for Singbox",
-  "main": "index.js",
   "scripts": {
-    "start": "electron .",
     "dev:webpack": "cross-env NODE_ENV=development webpack serve --mode development",
-    "dev:electron": "wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .",
-    "dev": "concurrently \"npm run dev:webpack\" \"npm run dev:electron\"",
     "build:webpack": "cross-env NODE_ENV=production webpack --mode production",
-    "build": "npm run build:webpack && electron-builder",
-    "build:win": "npm run build:webpack && electron-builder --win",
-    "build:win-portable": "npm run build:webpack && electron-builder --win portable",
-    "build:mac": "npm run build:webpack && electron-builder --mac",
-    "build:mac-universal": "npm run build:webpack && electron-builder --mac --universal",
-    "build:mac-arm64": "npm run build:webpack && electron-builder --mac --arm64",
-    "build:mac-x64": "npm run build:webpack && electron-builder --mac --x64",
-    "build:linux": "npm run build:webpack && electron-builder --linux",
-    "build:linux-portable": "npm run build:webpack && electron-builder --linux AppImage",
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,182 +28,29 @@
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
-    "electron": "37.2.5",
-    "electron-builder": "^25.1.8",
+    "@tauri-apps/cli": "^2.0.0",
+    "@tauri-apps/api": "^2.0.0",
     "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.11",
+    "thread-loader": "^4.0.4",
     "wait-on": "^8.0.3",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
-    "adm-zip": "^0.5.16",
     "echarts": "^5.6.0",
     "i18next": "^25.3.0",
     "i18next-browser-languagedetector": "^8.1.0",
     "js-yaml": "^4.1.0",
-    "node-fetch": "^3.3.2",
-    "nodejs-traceroute": "^2.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-i18next": "^15.7.2",
     "react-router-dom": "^7.7.1"
   },
-  "optionalDependencies": {
-    "dmg-license": "^1.0.11",
-    "electron-squirrel-startup": "^1.0.1"
-  },
-  "build": {
-    "appId": "com.lvory.app",
-    "productName": "lvory",
-    "directories": {
-      "output": "build",
-      "buildResources": "resources"
-    },
-    "files": [
-      "dist/**/*",
-      "index.js",
-      "package.json",
-      "src/main/**/*",
-      "src/utils/**/*",
-      "src/services/**/*",
-      "resource/icon/**/*",
-      "preload.js",
-      "!**/*.map",
-      "!**/*.md",
-      "!test/**/*",
-      "!scripts/**/*",
-      "!docs/**/*",
-      "!src/components/**/*",
-      "!src/assets/**/*",
-      "!public/**/*"
-    ],
-    "extraResources": [
-      {
-        "from": "resource/icon",
-        "to": "icon",
-        "filter": [
-          "**/*.png",
-          "**/*.ico"
-        ]
-      }
-    ],
-    "asar": true,
-    "compression": "maximum",
-    "removePackageScripts": true,
-    "afterSign": null,
-    "win": {
-      "target": [
-        {
-          "target": "msi",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "resource/icon/index256.png",
-      "artifactName": "${productName}-${version}-setup.${ext}"
-    },
-    "portable": {
-      "artifactName": "${productName}-${version}-portable.${ext}"
-    },
-    "msi": {
-      "oneClick": false,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "lvory",
-      "perMachine": false
-    },
-    "mac": {
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "resource/icon/index512.png",
-      "category": "public.app-category.utilities",
-      "darkModeSupport": true,
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "hardenedRuntime": false,
-      "gatekeeperAssess": false,
-      "identity": null
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ],
-      "window": {
-        "width": 540,
-        "height": 380
-      },
-      "iconSize": 128
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "deb",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "resource/icon/index256.png",
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "executableName": "lvory",
-      "synopsis": "Minimalist Cross-Platform Client for Singbox",
-      "description": "A minimalist cross-platform GUI client for sing-box, providing easy proxy management and configuration.",
-      "category": "Network",
-      "desktop": {
-        "StartupWMClass": "lvory"
-      },
-      "maintainer": "lvory Team"
-    },
-    "deb": {
-      "depends": [
-        "gconf2",
-        "gconf-service",
-        "libxss1",
-        "libappindicator1",
-        "libasound2"
-      ]
-    },
-    "fileAssociations": [],
-    "asarUnpack": [
-      "node_modules/nodejs-traceroute/**/*"
-    ]
-  },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron"
-    ]
+    "onlyBuiltDependencies": []
   }
 }

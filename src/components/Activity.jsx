@@ -60,7 +60,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
       }
       
       // 立即启动后端连接监听
-      if (isKernelRunning) {
+      if (isKernelRunning && window.electron?.logs) {
         window.electron.logs.startConnectionMonitoring().then(success => {
           if (success) {
             console.log('后端连接监听已启动');
@@ -84,11 +84,13 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
         console.log('连接监听已在10秒后自动停止');
         
         // 停止后端连接监听
-        window.electron.logs.stopConnectionMonitoring().then(() => {
-          console.log('后端连接监听已停止');
-        }).catch(error => {
-          console.error('停止后端连接监听时出错:', error);
-        });
+        if (window.electron?.logs) {
+          window.electron.logs.stopConnectionMonitoring().then(() => {
+            console.log('后端连接监听已停止');
+          }).catch(error => {
+            console.error('停止后端连接监听时出错:', error);
+          });
+        }
       }, 10000);
     }
 
@@ -99,7 +101,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
         connectionStopTimeoutRef.current = null;
       }
       // 组件卸载时确保停止后端监听
-      if (connectionMonitorActive) {
+      if (connectionMonitorActive && window.electron?.logs) {
         window.electron.logs.stopConnectionMonitoring().catch(error => {
           console.error('组件卸载时停止后端连接监听出错:', error);
         });
@@ -118,9 +120,11 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
 
     try {
       // 尝试重新获取连接历史
-      const history = await window.electron.logs.getConnectionLogHistory();
-      if (history?.length) {
-        setConnectionLogs(history.slice(-pageSize));
+      if (window.electron?.logs) {
+        const history = await window.electron.logs.getConnectionLogHistory();
+        if (history?.length) {
+          setConnectionLogs(history.slice(-pageSize));
+        }
       }
       
       // 清空当前连接状态以重新开始监听
@@ -196,6 +200,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
 
   useEffect(() => {
     const fetchLogs = async () => {
+      if (!window.electron?.logs) return;
       try {
         setLoading(true);
         if (activeTab === 'logs') {
@@ -296,16 +301,22 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
       }
     };
     
-    const unsubscribe = window.electron.logs.onMessage(onNewLog);
-    const unsubscribeActivity = window.electron.logs.onActivity(onNewLog);
-    const unsubscribeConnection = window.electron.logs.onConnection(onNewConnectionLog);
+    let unsubscribe, unsubscribeActivity, unsubscribeConnection, unsubscribeReset;
+
+    if (window.electron?.logs) {
+      unsubscribe = window.electron.logs.onMessage(onNewLog);
+      unsubscribeActivity = window.electron.logs.onActivity(onNewLog);
+      unsubscribeConnection = window.electron.logs.onConnection(onNewConnectionLog);
+    }
     
     // 监听连接状态重置事件
-    const unsubscribeReset = window.electron.ipcRenderer?.on('connection-log-reset', () => {
-      console.log('收到连接状态重置信号，清空前端连接数据');
-      setCurrentConnections(new Map());
-      setConnectionLogs([]);
-    });
+    if (window.electron?.ipcRenderer) {
+      unsubscribeReset = window.electron.ipcRenderer.on('connection-log-reset', () => {
+        console.log('收到连接状态重置信号，清空前端连接数据');
+        setCurrentConnections(new Map());
+        setConnectionLogs([]);
+      });
+    }
 
     return () => {
       if (updateTimer) {
@@ -336,6 +347,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
     
     if (scrollTop < 50) {
       const loadMoreLogs = async () => {
+        if (!window.electron?.logs) return;
         try {
           setLoading(true);
           
@@ -385,7 +397,9 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
   const handleClearLogs = async () => {
     try {
       // 只处理日志清除，移除连接相关清除逻辑
-      await window.electron.logs.clear();
+      if (window.electron?.logs) {
+        await window.electron.logs.clear();
+      }
       setLogs([]);
       setVisibleLogs([]);
     } catch (error) {
@@ -395,6 +409,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
 
   // 加载SingBox日志文件列表
   const loadSingboxLogFiles = async () => {
+    if (!window.electron?.logs) return;
     try {
       const result = await window.electron.logs.getSingboxLogFiles();
       if (result.success) {
@@ -416,6 +431,7 @@ const Activity = ({ isKernelRunning = false, isActivityView = false }) => {
 
   // 读取SingBox日志文件内容
   const loadSingboxLogContent = async (filePath) => {
+    if (!window.electron?.logs) return;
     try {
       setLoading(true);
       const result = await window.electron.logs.readSingboxLogFile(filePath);
